@@ -1,0 +1,11 @@
+---
+application_name:
+docker:
+  image:
+    name:
+    tag:
+  container_name:
+  ports:
+  volumes:
+  environment_variables:
+  extra_hosts:

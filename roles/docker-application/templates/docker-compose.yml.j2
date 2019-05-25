@@ -1,0 +1,33 @@
+#jinja2: lstrip_blocks: True
+
+version: '3.5'
+
+services:
+
+  {{ application|default('application') }}:
+    container_name: {{ docker.container_name }}
+    image: {{ docker.image.name }}:{{ docker.image.tag }}
+    {% if docker.ports is defined %}
+    ports:
+    {% for port in docker.ports %}
+        - {{ port }}
+    {% endfor %}
+    {% endif %}
+    {% if docker.volumes is defined %}
+    volumes:
+    {% for volume in docker.volumes %}
+        - {{ volume }}
+    {% endfor %}
+    {% endif %}
+    {% if docker.environment_variables is defined %}
+    environment:
+    {% for variable in docker.environment_variables %}
+        {{ variable }}
+    {% endfor %}
+    {% endif %}
+    {% if docker.extra_hosts is defined %}
+    extra_hosts:
+    {% for host in docker.extra_hosts %}
+        - {{ host }}
+    {% endfor %}
+    {% endif %}

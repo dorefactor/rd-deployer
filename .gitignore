@@ -1,0 +1,9 @@
+# Files
+.DS_Store
+extra-vars.json
+ansible.log
+inventory.json
+playbook.retry
+
+# Directories
+__pycache__

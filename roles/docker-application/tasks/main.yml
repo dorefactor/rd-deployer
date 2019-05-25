@@ -1,0 +1,19 @@
+---
+- name: create application folder structure
+  file: path={{ item }} state=directory
+  with_items:
+    - /opt/apps/{{ application_name }}
+
+- name: copy the application docker compose file
+  template:
+    src: templates/docker-compose.yml.j2
+    dest: /opt/apps/{{ application_name }}/docker-compose.yml
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
+
+- name: pull application docker image from registry
+  shell: docker-compose -f /opt/apps/{{ application_name }}/docker-compose.yml pull
+
+- name: run docker application container
+  shell: docker-compose -f /opt/apps/{{ application_name }}/docker-compose.yml up -d

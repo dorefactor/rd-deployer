@@ -1,0 +1,7 @@
+---
+- name: configure application
+  hosts: "{{ host_group_name | default('all') }}"
+  become: yes
+  become_user: root
+  roles:
+    - docker-application

@@ -1,0 +1,2 @@
+- name: load playbook from playbooks
+  import_playbook: "{{ playbook_path }}"
