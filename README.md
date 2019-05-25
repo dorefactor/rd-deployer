@@ -1,4 +1,4 @@
-# **Deployer Scripts**
+# **Deployment Scripts**
 
 Scripts able to deploy an application through [rd-jenkins-pipeline](https://github.com/dorefactor/rd-jenkins-pipeline)
 
