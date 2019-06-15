@@ -1,0 +1,9 @@
+kind: pipeline
+name: regular-deployer
+
+steps:
+- name: test-step
+  image: ubuntu:18.04
+  commands: 
+  - echo $RD_TEST_VARIABLE
+
