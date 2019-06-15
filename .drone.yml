@@ -6,4 +6,8 @@ steps:
   image: ubuntu:18.04
   commands: 
   - echo $RD_TEST_VARIABLE
+  when:
+    branch:
+    - master
+    - feature/*
 
