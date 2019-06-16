@@ -2,10 +2,10 @@ kind: pipeline
 name: regular-deployer
 
 steps:
-- name: test-step
-  image: ubuntu:18.04
+- name: python-version
+  image: apps.cavitos.net/rd-deployer:1.0
   commands: 
-  - echo $RD_TEST_VARIABLE
+  - python --version
   # when:
   #   branch:
   #   - master
