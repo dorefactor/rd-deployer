@@ -11,3 +11,5 @@ steps:
   #   - master
   #   - feature/*
 
+image_pull_secrets:
+- dockerconfigjson
