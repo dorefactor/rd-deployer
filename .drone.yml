@@ -2,14 +2,15 @@ kind: pipeline
 name: regular-deployer
 
 steps:
-- name: python-version
+- name: build-inventory
   image: apps.cavitos.net/rd-deployer:1.0
   commands: 
-  - python --version
-  # when:
-  #   branch:
-  #   - master
-  #   - feature/*
+  - python deployer/deployer.py --deployment-order-id=$DEPLOYMENT_ORDER_ID --api-url=$RD_API_URL --build-inventory
+
+- name: deployment
+  image: apps.cavitos.net/rd-deployer:1.0
+  commands:
+  - python deployer/deployer.py --execute
 
 image_pull_secrets:
 - dockerconfigjson
