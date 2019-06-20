@@ -4,11 +4,11 @@ name: regular-deployer
 steps:
 - name: build-inventory
   image: apps.cavitos.net/rd-deployer:1.0
-  commands: 
-  - python deployer/deployer.py --deployment-order-id=$DEPLOYMENT_ORDER_ID --api-url=$RD_API_URL --build-inventory
   volumes:
   - name: app-volume
-    path: /opt/cavitos/drone/tmp
+    path: /home/drone
+  commands: 
+  - python deployer/deployer.py --deployment-order-id=$DEPLOYMENT_ORDER_ID --api-url=$RD_API_URL --build-inventory
 
 - name: deployment
   image: apps.cavitos.net/rd-deployer:1.0
@@ -20,4 +20,4 @@ image_pull_secrets:
 
 volumes:
 - name: app-volume
-  temp: {}
+  path: /opt/cavitos/drone/tmp
