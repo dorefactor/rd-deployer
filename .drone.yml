@@ -11,6 +11,7 @@ steps:
 - name: deployment
   image: apps.cavitos.net/rd-deployer:1.0
   commands:
+  - pip3 install -r deployer/requirements.txt
   - python deployer/deployer.py --execute
 
 image_pull_secrets:
