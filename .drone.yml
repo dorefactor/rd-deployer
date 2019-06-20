@@ -5,7 +5,7 @@ steps:
 - name: build-inventory
   image: apps.cavitos.net/rd-deployer:1.0
   commands: 
-  - pip install -r deployer/requirements.txt
+  - pip3 install -r deployer/requirements.txt
   - python deployer/deployer.py --deployment-order-id=$DEPLOYMENT_ORDER_ID --api-url=$RD_API_URL --build-inventory
 
 - name: deployment
