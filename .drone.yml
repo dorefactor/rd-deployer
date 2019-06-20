@@ -20,4 +20,5 @@ image_pull_secrets:
 
 volumes:
 - name: app-volume
-  path: /opt/cavitos/drone/tmp
+  host:
+    path: /opt/cavitos/drone/tmp
