@@ -35,5 +35,3 @@ volumes:
 - name: cache
   host:
     path: /opt/cavitos/drone/tmp
-
-
