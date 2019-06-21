@@ -8,6 +8,7 @@ steps:
     RD_API_URL:
       from_secret: RD_API_URL
   commands: 
+  - echo $DEPLOYMENT_ORDER_ID
   - pip3 install -r deployer/requirements.txt
   - python deployer/deployer.py --deployment-order-id=$DEPLOYMENT_ORDER_ID --api-url=$RD_API_URL --build-inventory
 
@@ -17,6 +18,7 @@ steps:
     RD_API_URL:
       from_secret: RD_API_URL
   commands:
+  - echo $DEPLOYMENT_ORDER_ID
   - pip3 install -r deployer/requirements.txt
   - python deployer/deployer.py --execute
 
