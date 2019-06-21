@@ -33,4 +33,7 @@ image_pull_secrets:
 
 volumes:
 - name: cache
-  temp: {}
+  host:
+    path: /tmp/cache
+    
+
