@@ -10,7 +10,7 @@ import os
 
 
 def main():
-    inventory_filename = 'inventory.json'
+    inventory_filename = '/tmp/cache/inventory.json'
     exists_inventory_json_file = os.path.isfile(inventory_filename)
 
     if not exists_inventory_json_file:

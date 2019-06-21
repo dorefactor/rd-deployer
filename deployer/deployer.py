@@ -45,7 +45,7 @@ class File():
         if exists_file:
             os.remove(filename)
 
-        file = open(filename, "w+")
+        file = open('/tmp/cache/' + filename, "w+")
         file.write(json.dumps(content, indent=4))
         file.close()
 

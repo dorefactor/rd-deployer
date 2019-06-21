@@ -31,3 +31,4 @@ USER drone
 
 WORKDIR /home/drone
 
+VOLUME [ "/tmp/cache" ]
