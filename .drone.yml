@@ -33,5 +33,4 @@ image_pull_secrets:
 
 volumes:
 - name: cache
-  host:
-    path: /opt/cavitos/drone/tmp
+  temp: {}
