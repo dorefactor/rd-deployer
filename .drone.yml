@@ -14,8 +14,6 @@ steps:
   - echo $DEPLOYMENT_ORDER_ID
   - pip3 install -r deployer/requirements.txt
   - python deployer/deployer.py --deployment-order-id=$DEPLOYMENT_ORDER_ID --api-url=$RD_API_URL --build-inventory
-  - cat inventory.json
-  - cat extra-vars.json
 
 - name: deployment
   image: apps.cavitos.net/rd-deployer:1.2

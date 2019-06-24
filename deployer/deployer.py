@@ -123,7 +123,7 @@ class AnsibleInventory():
         extra_variables = {
             'application_name': application['name'],
             'docker': docker,
-            'playbook_path': '../playbooks/docker-application/playbook.yml'
+            'playbook_path': 'playbooks/docker-application/playbook.yml'
         }
 
         self.__file.write_json_file(
