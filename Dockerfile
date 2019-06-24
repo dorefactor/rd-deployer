@@ -25,11 +25,11 @@ RUN apt-get update && apt-get install -y \
     && pip3 install \
       ansible
 
-RUN useradd -m drone \
-    && mkdir -p /home/drone/cache
+# RUN useradd -m drone \
+#     && mkdir -p /home/drone/cache
 
-USER drone
+# USER drone
 
-WORKDIR /home/drone
+# WORKDIR /home/drone
 
-VOLUME [ "/home/drone/cache" ]
+# VOLUME [ "/home/drone/cache" ]
