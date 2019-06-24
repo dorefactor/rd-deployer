@@ -24,12 +24,3 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/* \
     && pip3 install \
       ansible
-
-# RUN useradd -m drone \
-#     && mkdir -p /home/drone/cache
-
-# USER drone
-
-# WORKDIR /home/drone
-
-# VOLUME [ "/home/drone/cache" ]
