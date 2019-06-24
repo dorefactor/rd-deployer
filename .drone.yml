@@ -7,9 +7,6 @@ steps:
   environment:
     RD_API_URL:
       from_secret: RD_API_URL
-  # volumes:
-  # - name: cache
-  #   path: /home/drone/cache
   commands: 
   - echo $DEPLOYMENT_ORDER_ID
   - pip3 install -r deployer/requirements.txt
@@ -20,9 +17,6 @@ steps:
   environment:
     RD_API_URL:
       from_secret: RD_API_URL
-  # volumes:
-  # - name: cache
-  #   path: /home/drone/cache
   commands:
   - echo $DEPLOYMENT_ORDER_ID
   - pip3 install -r deployer/requirements.txt
@@ -30,9 +24,3 @@ steps:
 
 image_pull_secrets:
 - dockerconfigjson
-
-# volumes:
-# - name: cache
-#   host:
-#     path: /opt/cavitos/drone/drone
-
