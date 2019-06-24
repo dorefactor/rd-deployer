@@ -46,7 +46,7 @@ class File():
         if exists_file:
             os.remove(filename)
 
-        file = open('/home/drone/cache/' + filename, "w+")
+        file = open(filename, "w+")
         file.write(json.dumps(content, indent=4))
         file.close()
 
@@ -63,7 +63,7 @@ class AnsibleInventory():
     def __init__(self):
         self.__inventory_filename = 'inventory.json'
         # self.__extra_vars_filename = 'extra-vars.json'
-        self.__extra_vars_filename = '{0}/{1}'.format(str(Path.home()), 'extra-vars.json')
+        self.__extra_vars_filename = '{0}/{1}'.format(str(Path.home()), '/cache/extra-vars.json')
         self.__file = File()
 
     def is_inventory_exists(self):
