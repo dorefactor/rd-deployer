@@ -21,7 +21,7 @@ class DeployQueueListener:
                                       credentials=pika.PlainCredentials(os.environ.get('RABBITMQ_USER'),
                                                                         os.environ.get('RABBITMQ_PASSWORD'))))
         self.__channel = connection.channel()
-        self.__channel.queue_declare(queue=self.__queue)
+        self.__channel.queue_declare(queue=self.__queue, durable=True)
 
     def start_consuming(self):
         self.__channel.basic_consume(
