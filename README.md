@@ -13,13 +13,13 @@ Scripts able to deploy an application
 
 ### **Services**
 
-* [RegularApi](https://github.com/dorefactor/RegularApi)
+* [rd-api](https://github.com/dorefactor/rd-api)
 
 ### **Steps**
 
 * **[Requited]. You must provide the following as environment variables:**
 
-  * **RD_API_URL. [RegularApi](https://github.com/dorefactor/RegularApi)**
+  * **RD_API_URL. [rd-api](https://github.com/dorefactor/rd-api)**
   * **RABBITMQ_USER**
   * **RABBITMQ_PASSWORD**
 
