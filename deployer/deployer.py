@@ -8,7 +8,6 @@ from collections import defaultdict
 import os
 import subprocess
 import sys
-from pathlib import Path
 
 # -----------------------------
 # RegularOrchestratorClient
@@ -135,49 +134,32 @@ class AnsibleInventory():
 
 class Command():
 
-    def __init__(self):
+    def __init__(self, rd_api_url):
+        if not rd_api_url:
+            print("No `api-url` was provided")
+            sys.exit(-1)
+        
+        self.__rd_api_url = rd_api_url
         self.__ansible_inventory = AnsibleInventory()
-        self.__initialize_commands()
+        self.__ansible_inventory.api_url = self.__rd_api_url
 
-    def __initialize_commands(self):
-        # read command line arguments
-        arguments_parser = argparse.ArgumentParser()
-        arguments_parser.add_argument('--build-inventory', action='store_true')
-        arguments_parser.add_argument('--deployment-order-id')
-        arguments_parser.add_argument('--api-url')
-        arguments_parser.add_argument('--execute', action='store_true')
-        self.__arguments = arguments_parser.parse_args()
-
-    def run(self):
-        if self.__arguments.build_inventory:
-            self.__run_build_command()
-
-        if self.__arguments.execute:
-            self.__run_execute_command()
-
-    def __run_build_command(self):
-        if not self.__arguments.deployment_order_id:
-            print("No argument `--deployment-order-id` was provided")
+    def build_inventory(self, deployment_order_id):
+        if not deployment_order_id:
+            print("No `deployment-order-id` was provided")
             return
 
-        if not self.__arguments.api_url:
-            print("No argument `--api-url` was provided")
-            return
+        self.__deployment_order_id = deployment_order_id
 
         # Set inventory properties
-        self.__ansible_inventory.api_url = self.__arguments.api_url
-        self.__ansible_inventory.deployment_order_id = self.__arguments.deployment_order_id
-
+        self.__ansible_inventory.deployment_order_id = deployment_order_id
         self.__ansible_inventory.write_inventory()
 
         if not self.__ansible_inventory.is_inventory_exists():
-            sys.exit(-1)
+            print ('No inventory was generated for deployment-order-id={0}'.format(deployment_order_id))
 
-    def __run_execute_command(self):
-        if self.__arguments.execute:
-
+    def deploy(self):
             if not self.__ansible_inventory.is_inventory_exists():
-                sys.exit(-1)
+                print ('No inventory exists for deployment-order-id={0}'.format(self.__deployment_order_id))
                 return
 
             process = subprocess.Popen(['ANSIBLE_CONFIG=deployer/ansible.cfg ansible-playbook -i deployer/inventory.py deployer/playbook.yml --extra-vars "@extra-vars.json"'],
@@ -198,7 +180,7 @@ class Command():
             (output, error) = process.communicate()
             exit_code = process.returncode
 
-            sys.exit(self.__build_exit_code(exit_code))
+            return self.__build_exit_code(exit_code)
 
     def __build_exit_code(self, exit_code):
         # -----------------------------
@@ -216,17 +198,3 @@ class Command():
             return -1
 
         return 0
-
-# -----------------------------
-# Main
-# -----------------------------
-
-
-def main():
-    # Read command line arguments
-    command = Command()
-    command.run()
-
-
-if __name__ == '__main__':
-    main()
