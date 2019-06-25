@@ -1,4 +1,4 @@
-# **Deployer Scripts**
+# **Deployer**
 
 Scripts able to deploy an application
 
@@ -19,9 +19,9 @@ Scripts able to deploy an application
 
 * **[Requited]. You must provide the following as environment variables:**
 
-  * **RD_API_URL. [RegularApi](https://github.com/dorefactor/RegularApi)**
-  * **RABBITMQ_USER**
-  * **RABBITMQ_PASSWORD**
+  * **RD_API_URL. [RegularApi](https://github.com/dorefactor/RegularApi)**
+  * **RABBITMQ_USER**
+  * **RABBITMQ_PASSWORD**
 
 * Listen queue in RabbitMQ to deploy an application
 
