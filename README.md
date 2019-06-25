@@ -6,6 +6,8 @@ Scripts able to deploy an application
 
 * Python 3 & Pip 3
 * Ansible 2.8+
+* RabbitMQ
+  * The queue to receive a deployment order is `com.dorefactor.deploy.queue`
 
 ## **Manual Testing**
 
