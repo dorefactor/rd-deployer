@@ -13,7 +13,7 @@ import os
 class DeployQueueListener:
 
     def __init__(self):
-        self.__queue = 'com.dorefactor.deploy.queue'
+        self.__queue = 'com.dorefactor.deploy.command'
         self.__command = deployer.Command(os.environ.get('RD_API_URL'))
 
         connection = pika.BlockingConnection(
