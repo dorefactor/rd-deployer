@@ -1,29 +1,67 @@
-# **Deployment Scripts**
+# **Deployer Scripts**
 
-Scripts able to deploy an application through [rd-jenkins-pipeline](https://github.com/dorefactor/rd-jenkins-pipeline)
+Scripts able to deploy an application
 
 ## **Prerequisites**
 
 * Python 3 & Pip 3
 * Ansible 2.8+
+* RabbitMQ
+  * The queue to receive a deployment order is `com.dorefactor.deploy.command`
 
 ## **Manual Testing**
 
 ### **Services**
 
 * [RegularApi](https://github.com/dorefactor/RegularApi)
-* [rd-jenkins-builder](https://github.com/dorefactor/rd-jenkins-builder)
 
-### **Commands**
+### **Steps**
 
-* Generate ansible inventory
+* **[Requited]. You must provide the following as environment variables:**
+
+  * **RD_API_URL. [RegularApi](https://github.com/dorefactor/RegularApi)**
+  * **RABBITMQ_USER**
+  * **RABBITMQ_PASSWORD**
+
+* Listen queue in RabbitMQ to deploy an application
 
 ```sh
-python deployer/deployer.py --deployment-order-id=${DEPLOYMENT_ORDER_ID} --api-url=${RD_API_URL} --build-inventory
+python3 deployer/rabbitmq_listener.py
 ```
 
-* Run deployment
+* Execute a deployment
+  * Send a message to `com.dorefactor.deploy.command` queue in RabbitMQ
+
+### **Docker**
+
+* Build an image
 
 ```sh
-python deployer/deployer.py --execute
+docker build -t rd-deployer:1.0 .
 ```
+
+* Run the container
+
+  * Command-line
+
+  ```sh
+  docker run --rm --name rd-deployer --network bridge --add-host rabbitmq-host:192.168.99.1 -e RD_API_URL=${RD_API_URL} -e RABBITMQ_USER=${RABBITMQ_USER} -e RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD} rd-deployer:1.0
+  ```
+
+  * Docker Compose
+
+  ```sh
+  version: '3.7'
+
+  services:
+
+    deployer:
+      image: rd-deployer:1.0
+      container_name: rd-deployer
+      environment:
+        RD_API_URL: ${RD_API_URL}
+        RABBITMQ_USER: ${RABBITMQ_USER}
+        RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+      extra_hosts: 
+        - rabbitmq-host:192.168.99.1
+  ```
