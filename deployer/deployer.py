@@ -8,6 +8,8 @@ from collections import defaultdict
 import os
 import subprocess
 import sys
+import uuid
+
 
 # -----------------------------
 # RegularOrchestratorClient
@@ -105,21 +107,57 @@ class AnsibleInventory():
     def __build_extra_variables(self, deployment_order):
         application = deployment_order['application']
         application_setup = application['applicationSetup']
+        docker_registry = application_setup['registry']
+        docker_image = application_setup['image']
+
+        registry = {
+            'is_private': 'y' if docker_registry['isPrivate'] else 'n'
+        }
+
+        docker_image_name = docker_image['name']
+
+        if docker_registry['isPrivate']:
+            registry['url'] = 'https://{0}'.format(docker_registry['url'])
+            registry['username'] = docker_registry['username']
+            registry['password'] = docker_registry['password']
+            docker_image_name = '{0}/{1}'.format(
+                docker_registry['url'], docker_image['name'])
 
         ports = [('{0}:{1}'.format(key, value))
                  for key, value in application_setup['ports'].items()]
         environment_variables = [('{0}: {1}'.format(
             key, value)) for key, value in application_setup['environmentVariables'].items()]
+        extra_hosts = [('{0}:{1}'.format(
+            key, value)) for key, value in application_setup['extraHosts'].items()]
+        volumes = [('{0}:{1}'.format(
+            value, key)) for key, value in application_setup['volumes'].items()]
+
+        application_name = '{0}-{1}'.format(
+            application['name'], uuid.uuid4().hex[:10])
 
         docker = {
-            'container_name': application['name'],
-            'image': application_setup['image'],
-            'ports': ports,
-            'environment_variables': environment_variables
+            'container_name': application_name,
+            'registry': registry,
+            'image': {
+                'name': docker_image_name,
+                'tag': docker_image['tag']
+            }
         }
 
+        if ports:
+            docker['ports'] = ports
+
+        if environment_variables:
+            docker['environment_variables'] = environment_variables
+
+        if extra_hosts:
+            docker['extra_hosts'] = extra_hosts
+
+        if volumes:
+            docker['volumes'] = volumes
+
         extra_variables = {
-            'application_name': application['name'],
+            'application_name': application_name,
             'docker': docker,
             'playbook_path': '../playbooks/docker-application/playbook.yml'
         }
@@ -138,7 +176,7 @@ class Command():
         if not rd_api_url:
             print("No `api-url` was provided")
             sys.exit(-1)
-        
+
         self.__rd_api_url = rd_api_url
         self.__ansible_inventory = AnsibleInventory()
         self.__ansible_inventory.api_url = self.__rd_api_url
@@ -155,32 +193,34 @@ class Command():
         self.__ansible_inventory.write_inventory()
 
         if not self.__ansible_inventory.is_inventory_exists():
-            print ('No inventory was generated for deployment-order-id={0}'.format(deployment_order_id))
+            print(
+                'No inventory was generated for deployment-order-id={0}'.format(deployment_order_id))
 
     def deploy(self):
-            if not self.__ansible_inventory.is_inventory_exists():
-                print ('No inventory exists for deployment-order-id={0}'.format(self.__deployment_order_id))
-                return
+        if not self.__ansible_inventory.is_inventory_exists():
+            print(
+                'No inventory exists for deployment-order-id={0}'.format(self.__deployment_order_id))
+            return
 
-            process = subprocess.Popen(['ANSIBLE_CONFIG=deployer/ansible.cfg ansible-playbook -i deployer/inventory.py deployer/playbook.yml --extra-vars "@extra-vars.json"'],
-                                       stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE,
-                                       shell=True)
+        process = subprocess.Popen(['ANSIBLE_CONFIG=deployer/ansible.cfg ansible-playbook -i deployer/inventory.py deployer/playbook.yml --extra-vars "@extra-vars.json"'],
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE,
+                                   shell=True)
 
-            # -----------------------------------------------------------------------
-            # Do not wait till process finish, start displaying output immediately
-            # -----------------------------------------------------------------------
-            while True:
-                line = process.stdout.readline()
-                if line == b'' and process.poll() != None:
-                    break
-                sys.stdout.write(line.decode('utf-8'))
-                sys.stdout.flush()
+        # -----------------------------------------------------------------------
+        # Do not wait till process finish, start displaying output immediately
+        # -----------------------------------------------------------------------
+        while True:
+            line = process.stdout.readline()
+            if line == b'' and process.poll() != None:
+                break
+            sys.stdout.write(line.decode('utf-8'))
+            sys.stdout.flush()
 
-            (output, error) = process.communicate()
-            exit_code = process.returncode
+        (output, error) = process.communicate()
+        exit_code = process.returncode
 
-            return self.__build_exit_code(exit_code)
+        return self.__build_exit_code(exit_code)
 
     def __build_exit_code(self, exit_code):
         # -----------------------------
