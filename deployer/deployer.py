@@ -193,13 +193,12 @@ class Command():
         self.__ansible_inventory.write_inventory()
 
         if not self.__ansible_inventory.is_inventory_exists():
-            print(
-                'No inventory was generated for deployment-order-id={0}'.format(deployment_order_id))
+            print('No inventory was generated for deployment-order-id={0}'.format(deployment_order_id))
 
     def deploy(self):
         if not self.__ansible_inventory.is_inventory_exists():
-            print(
-                'No inventory exists for deployment-order-id={0}'.format(self.__deployment_order_id))
+            print('No inventory exists for deployment-order-id={0}'.format(self.__deployment_order_id))
+
             return
 
         process = subprocess.Popen(['ANSIBLE_CONFIG=deployer/ansible.cfg ansible-playbook -i deployer/inventory.py deployer/playbook.yml --extra-vars "@extra-vars.json"'],
