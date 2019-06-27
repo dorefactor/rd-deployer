@@ -1,4 +1,23 @@
 ---
+- name: install aptitude package
+  become: true
+  apt:
+    name: ['aptitude']
+    state: present
+
+- name: install python packages
+  apt:
+    name: ['python3-pip', 'docker']
+    state: present
+  become: true
+
+- name: login into docker registry
+  docker_login:
+    registry_url: '{{ docker.registry.url }}'
+    username: '{{ docker.registry.username }}'
+    password: '{{ docker.registry.password }}'
+  when: docker.registry.is_private == 'y'
+
 - name: create application folder structure
   file: path={{ item }} state=directory
   with_items:

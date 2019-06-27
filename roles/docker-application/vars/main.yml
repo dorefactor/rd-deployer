@@ -1,6 +1,11 @@
 ---
 application_name:
 docker:
+  registry:
+    url:
+    username:
+    password:
+    is_private: n
   image:
     name:
     tag:

@@ -50,8 +50,11 @@ class DeployQueueListener:
 
 
 def main():
-    deploy_queue_listener = DeployQueueListener()
-    deploy_queue_listener.start_consuming()
+    try:
+        deploy_queue_listener = DeployQueueListener()
+        deploy_queue_listener.start_consuming()
+    except Exception as exception:
+        print (exception)
 
 
 if __name__ == '__main__':
